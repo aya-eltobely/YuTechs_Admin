@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item"  (click)="onToggleShow('Author')">
+      <a class="nav-link"  [style.cursor]="'pointer'" [class.active]="isAuthor()">Authors</a>
+    </li>
+    <li class="nav-item"   (click)="onToggleShow('News')">
+      <a class="nav-link"  [style.cursor]="'pointer'" [class.active]="!isAuthor()">News</a>
+    </li>
+  </ul>
+
+
+@if(isAuthor()){
+  <app-author-list></app-author-list>
+
+}
+@else{
+    <app-news-list></app-news-list>
+}

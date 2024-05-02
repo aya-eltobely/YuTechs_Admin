@@ -1,0 +1,91 @@
+
+<div class="d-flex justify-content-end ">
+  <button ngbDropdownItem  class="btn btn-primary" class="add-btn" (click)="open(content, 'Add',null)">
+    &#43; 
+  </button>
+</div>
+
+<form>
+	<div class="mb-3 row">
+		<label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Search By Name : </label>
+		<div class="col-xs-3 col-sm-auto">
+			<input id="table-filtering-search" class="form-control" type="text" [formControl]="filter" />
+		</div>
+	</div>
+</form>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col" [style.cursor]="'pointer'" sortable="name" (sort)="onSort($event)">Name</th>
+      <th scope="col" [style.cursor]="'pointer'"> Action</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let author of authors">
+        <td scope="row">{{ author.id }}</td>
+        <td>
+          {{ author.name }}
+        </td>
+        <td>
+            <div ngbDropdown class="d-inline-block">
+                <button type="button" class="btn" id="dropdownBasic1"  ngbDropdownToggle>
+                    &#8942;
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem (click)="open(content, 'Edit',author)">Edit</button>
+                    <button ngbDropdownItem (click)="openDelete(deleteContent,author.id)">Delete</button>
+                </div>
+            </div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title"> {{type}} Author</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="form"> 
+			<div class="mb-3">
+    
+        <div class="input-group d-flex flex-column ">
+          <label for="name">Name:</label>
+          <input type="text" class="form-control w-100" id="name" formControlName="name">
+          <div *ngIf="form.get('name')?.invalid && (form.get('name')?.dirty || form.get('name')?.touched)">
+            <div class="text-danger " *ngIf="form.get('name')?.errors?.['required']">Name is required.</div>
+            <div class="text-danger " *ngIf="form.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</div>
+            <div class="text-danger " *ngIf="form.get('name')?.errors?.['maxlength']">Name cannot exceed 20 characters.</div>
+          </div>
+        </div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Cancel</button>
+		<button type="button" class="btn btn-outline-success " (click)="modal.close('Save click')">Save</button>
+	</div>
+</ng-template>
+
+
+<ng-template #deleteContent let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Author Delete !</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+	Are You Sure To Delete This Author ?
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Cancel</button>
+		<button type="button" class="btn btn-outline-danger" (click)="modal.close('Delete click')">Confirm</button>
+	</div>
+</ng-template>

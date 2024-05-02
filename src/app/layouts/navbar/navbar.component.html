@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4 d-flex  justify-content-between ">
+  <a class="navbar-brand" href="#">Logo</a>
+
+  @if (islogged) {
+
+
+  <div ngbDropdown class="d-inline-block">
+    <div id="dropdownBasic1"  [style.cursor]="'pointer'"  ngbDropdownToggle>
+      <img src="../../../assets/images-removebg-preview.png" alt="">
+          Welcome Back <b>{{adminName}} </b>
+    </div>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      <button ngbDropdownItem (click)="onlogout()"> Logout</button>
+
+    </div>
+  </div>
+
+  }
+  @else {
+  <a routerLink="/login" class="text-black"> Log In </a>
+  }
+</nav>

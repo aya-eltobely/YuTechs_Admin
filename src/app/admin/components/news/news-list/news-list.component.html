@@ -1,0 +1,156 @@
+<div class="d-flex justify-content-end ">
+    <button ngbDropdownItem class="btn btn-primary" class="add-btn" (click)="open(content, 'Add',null)">
+        &#43;
+    </button>
+</div>
+
+<form>
+    <div class="mb-3 row">
+        <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Search By Title : </label>
+        <div class="col-xs-3 col-sm-auto">
+            <input id="table-filtering-search" class="form-control" type="text" [formControl]="filter" />
+        </div>
+    </div>
+</form>
+
+
+<div class="table-responsive">
+    <table class="table ">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col" [style.cursor]="'pointer'" sortable="title" (sort)="onSort($event)">Title</th>
+                <th scope="col" [style.cursor]="'pointer'" sortable="authorName" (sort)="onSort($event)">Author Name</th>
+                <th scope="col" [style.cursor]="'pointer'" sortable="newss" (sort)="onSort($event)">News</th>
+                <th scope="col" [style.cursor]="'pointer'">Image</th>
+                <th scope="col" [style.cursor]="'pointer'" sortable="creationDate" (sort)="onSort($event)">Creation Date</th>
+                <th scope="col" [style.cursor]="'pointer'" sortable="publicationDate" (sort)="onSort($event)">Publication Date</th>
+                <th scope="col" [style.cursor]="'pointer'"> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of news">
+                <td scope="row">{{ item.id }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.authorName }}</td>
+                <td>{{ item.newss }}</td>
+                <td><img width="120px" class="rounded-[10px] my-2"
+                        [src]="'data:' + item.contentType + ';base64, ' + item.imageData" alt=""></td>
+                <td>{{ item.creationDate | date}}</td>
+                <td>{{ item.publicationDate | date}}</td>
+
+                <td>
+                    <div ngbDropdown class="d-inline-block">
+                        <button type="button" class="btn" id="dropdownBasic1" ngbDropdownToggle>
+                            &#8942;
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button ngbDropdownItem (click)="open(content, 'Edit',item)">Edit</button>
+                            <button ngbDropdownItem (click)="openDelete(deleteContent,item.id)">Delete</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"> {{type}} News</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="form">
+            <div class="mb-3">
+
+                <!-- title -->
+                <div class="input-group d-flex flex-column mb-3  ">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control w-100" id="title" formControlName="title">
+                    <div *ngIf="form.get('title')?.invalid && (form.get('title')?.dirty || form.get('title')?.touched)">
+                        <div class="text-danger " *ngIf="form.get('title')?.errors?.['required']">Title is required.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- news -->
+                <div class="input-group d-flex flex-column mb-3 ">
+                    <label for="newss">News:</label>
+                    <input type="text" class="form-control w-100" id="newss" formControlName="newss">
+                    <div *ngIf="form.get('newss')?.invalid && (form.get('newss')?.dirty || form.get('newss')?.touched)">
+                        <div class="text-danger " *ngIf="form.get('newss')?.errors?.['required']">News is required.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- author id -->
+                <div class="mb-3">
+                    <select class="form-select" formControlName="authorId">
+                        <option selected disabled value="null">Choose Author</option>
+                        <option *ngFor="let author of allAuthors" [value]="author.id">{{author.name}}</option>
+                    </select>
+                    <div
+                        *ngIf="form.get('authorId')?.invalid && (form.get('authorId')?.dirty || form.get('authorId')?.touched)">
+                        <div class="text-danger " *ngIf="form.get('authorId')?.errors?.['required']">Author is required.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- publication date -->
+                <div>
+                    <label for="startDate">Start</label>
+                    <input id="startDate" class="form-control" type="date" formControlName="publicationDate" />
+
+                    <div
+                        *ngIf="form.get('publicationDate')?.invalid && (form.get('publicationDate')?.dirty || form.get('publicationDate')?.touched)">
+                        <div class="text-danger " *ngIf="form.get('publicationDate')?.errors?.['required']">Publication
+                            Date is required.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image -->
+                <div class="mb-3 ">
+                    <div class="d-flex my-4 w-100">
+                        <input type="file" accept="image/*" id="upload22" hidden (click)="onChangeState()"
+                            (change)="onFileSelected($event)" />
+                        <label for="upload22"
+                            class="w-100 text-center text-success border-success-subtle   border border-dashed border-2 lg:py-8 lg:px-28 text-#7c4e27 p-2 rounded border-#7c4e27">
+                            <p class="pt-2">
+                                Upload News Image
+                            </p>
+                            <div class="w-10 m-auto  d-flex justify-content-center align-items-center  ">
+                                <img width="200px" *ngIf="previewImg" [src]="previewImg" />
+                            </div>
+                        </label>
+                    </div>
+                    <span class="text-danger " *ngIf="isImageError()"> Image is required </span>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Cancel</button>
+        <button type="button" class="btn btn-outline-success " (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>
+
+
+<ng-template #deleteContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Author Delete !</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        Are You Sure To Delete This Author ?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Cancel</button>
+        <button type="button" class="btn btn-outline-danger" (click)="modal.close('Delete click')">Confirm</button>
+    </div>
+</ng-template>

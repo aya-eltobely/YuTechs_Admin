@@ -1,0 +1,32 @@
+<div class=" ">
+
+  <div class="flex w-full">
+
+
+    <div class=" text-black " style="width: 100%;">
+                   
+      <div class="w-full" *ngIf="!isLoggedView()">
+        <app-navbar></app-navbar>
+
+        <div class="flex ">
+
+          <div class="m-3  w-full h-[100vh]">
+            <router-outlet></router-outlet>
+          </div>
+
+        </div>
+  
+      </div>
+
+      
+
+    </div>
+
+  </div>
+
+
+  <div class="footer" *ngIf="isLoggedView()">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
